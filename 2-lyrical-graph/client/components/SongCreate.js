@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Link, hashHistory } from 'react-router'
-
+import { Link, hashHistory } from 'react-router';
+import fetchSongs from '../queries/fetchSongs.graphql';
+import addSongs from '../queries/addSong.graphql';
 
 class SongCreate extends Component {
 
@@ -19,7 +20,8 @@ class SongCreate extends Component {
                 this.props.mutate({
                         variables: {
                                 title: this.state.title
-                        }
+                        },
+                        refetchQueries: [{ query: fetchSongs }]
                 }).then( () => {
                        hashHistory.push('/');
                 });                
@@ -27,9 +29,6 @@ class SongCreate extends Component {
 
 
         render() {
-
-                //if ( this.props.data.loading ) return <div className="loading">Loading...</div>;
-
                 return (
                         <div>
                                 <Link to="/" >Back</Link>
@@ -44,12 +43,4 @@ class SongCreate extends Component {
         }
 }
 
-const mutation = gql`
-mutation AddSong($title: String){
-        addSong(title: $title){
-          id,
-          title
-        }
-}`;
-
-export default graphql(mutation)(SongCreate);
+export default graphql(addSongs)(SongCreate);
