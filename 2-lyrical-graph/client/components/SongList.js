@@ -7,10 +7,10 @@ import deleteSong from '../queries/deleteSong.graphql';
 
 class SongList extends Component {
 
-        _renderList() {
-                return this.props.data.songs.map(song => {
+        _renderList(songs) {
+                return songs.map(song => {
                         return <li className="collection-item" key={song.id}> 
-                                        {song.title}
+                                        <Link to={`/songs/${song.id}`} >{song.title}</Link>
                                         <i onClick={this.delete.bind(this, song.id)} className="material-icons">delete</i>
                                 </li>
                 });
@@ -27,10 +27,12 @@ class SongList extends Component {
 
                 if (this.props.data.loading) return <div className="loading">Loading...</div>;
 
+                const {songs} = this.props.data;
+
                 return (
                         <div>
                                 <ul className="collection">
-                                        {this._renderList()}
+                                        {this._renderList(songs)}
                                 </ul>
                                 <Link to="songs/new" className="btn-floating btn-large red right" style={{ textAling: 'center'}} >
                                         <i className="material-icons">adds</i>
