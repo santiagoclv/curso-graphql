@@ -7,15 +7,13 @@ import Header from "./Header";
 
 class App extends Component {
   render() {
-
-    if (!!this.props.data && !!this.props.data.loading) return <div className="loading">Loading...</div>;
-
-    const {user} = this.props.data;
-
+    const {user, loading} = this.props.data;
+    
     return (
       <div>
-         <Header user={user} />
-         {this.props.children}
+         <Header user={user} loading={loading} />
+         {loading && <div className="loading">Loading...</div>}
+         {user && this.props.children}
       </div>
     )
   }
