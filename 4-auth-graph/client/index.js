@@ -7,6 +7,7 @@ import { Router, hashHistory, Route, IndexRoute } from "react-router";
 import App from "./components/App";
 import SingupForm from "./components/SingupForm";
 import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
 
 const networkInterface = createNetworkInterface({
   uri : '/graphql',
@@ -27,6 +28,7 @@ const Root = () => {
         <Route path="/" component={App} >
           <Route path="singup" component={SingupForm} />
           <Route path="login" component={LoginForm} />
+          <Route path="dashboard" component={Dashboard} />
         </Route>
         
       </Router>

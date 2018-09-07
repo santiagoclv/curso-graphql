@@ -11,15 +11,16 @@ class AuthForm extends Component {
     this.state = {
       email: "",
       password: "",
-      ended: false
+      errors: null
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   onSubmit(event) {
     event.preventDefault();
 
-    let { mutate } = this.props;
+    let { mutate, redirect } = this.props;
     let { email, password} = this.state;
 
     mutate({
@@ -27,37 +28,60 @@ class AuthForm extends Component {
             email,
             password
         },
-        refetchQueries: [{ query: currentUser }],
-        update: () => {
-          this.setState({ ended : true });
-        }
+        refetchQueries: [{ query: currentUser }]
+    }).then( (result) => {
+        console.log(result);
+        redirect();
+    }).catch( ({graphQLErrors}) => {
+        const errors = graphQLErrors.map(err => err.message);
+        this.setState({errors});
     });
-}
+  }
+
+  onChange({ target : {value, id}}){
+    this.setState({
+      [id]: value
+    });
+  }
 
   render() {
 
-    if(this.state.ended){
-      return <Redirect to="/" />
-    }
+    const { email, password, errors } = this.state;
+
 
     return (
       <div className="row" >
-        <form className="col s4" >
+        <form onSubmit={this.onSubmit} className="col s6" >
           <div className="input-field">
-            <label>Email</label>
             <input 
-              value={this.state.email}
-              onChange={ e => this.setState({ email : e.target.value }) }
+              placeholder="Email"
+              id="email"
+              type="email"
+              className="validate"
+              value={email}
+              onChange={this.onChange}
             />
+            <span className="helper-text" data-error="Not Valid Email" data-success="Valid email"></span>
           </div>
           <div className="input-field">
-            <label>Password</label>
-            <input 
-              value={this.state.password}
-              onChange={ e => this.setState({ password : e.target.value }) }
+            <input
+              placeholder="Password"
+              id="password"
+              type="password"
+              className="validate"
+              value={password}
+              onChange={this.onChange}
             />
           </div>
-          <buttom className="btn" onClick={this.onSubmit} >Submit</buttom>
+
+          <div style={{color: 'red'}} >
+            { errors && errors.map( err =>
+              <div key={err}>
+                {err}
+              </div>
+            )}
+          </div>
+          <input className="waves-effect waves-light btn-large" type="submit" value="Submit" />
         </form>
       </div>
     )
