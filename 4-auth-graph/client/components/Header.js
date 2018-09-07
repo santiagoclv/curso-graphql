@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { graphql } from 'react-apollo';
 
 import logout from '../mutations/logout.graphql';
+import currentUser from '../queries/currentUser.graphql';
 
 class Header extends Component {
 
@@ -10,7 +11,9 @@ class Header extends Component {
   logout(){
     const {mutate} = this.props;
 
-    mutate();
+    mutate({
+      refetchQueries: [{ query: currentUser }]
+    });
   }
 
   renderBurron() {
@@ -30,14 +33,14 @@ class Header extends Component {
       );
     } else {
       return (
-        <div className="right">
+        <ul className="right">
           <li>
             <Link to="/singup">Singup</Link>
           </li>
           <li>
             <Link to="/login">Login</Link>
           </li>
-        </div>
+        </ul>
       );
     }
   }
