@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect } from "react-router";
+import { withRouter } from 'react-router';
+import { graphql } from 'react-apollo';
 
 import currentUser from '../queries/currentUser.graphql';
 
@@ -17,10 +18,25 @@ class AuthForm extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  redirect(){
+    const { data, redirect, router } = this.props;
+    if(!!data && !!data.user){
+      router.push(redirect);
+    }
+  }
+
+  componentDidMount(){
+    this.redirect();
+  }
+
+  componentDidUpdate(){
+    this.redirect();
+  }
+
   onSubmit(event) {
     event.preventDefault();
 
-    let { mutate, redirect } = this.props;
+    let { mutate } = this.props;
     let { email, password} = this.state;
 
     mutate({
@@ -29,9 +45,6 @@ class AuthForm extends Component {
             password
         },
         refetchQueries: [{ query: currentUser }]
-    }).then( (result) => {
-        console.log(result);
-        redirect();
     }).catch( ({graphQLErrors}) => {
         const errors = graphQLErrors.map(err => err.message);
         this.setState({errors});
@@ -88,4 +101,4 @@ class AuthForm extends Component {
   }
 }
 
-export default AuthForm;
+export default graphql(currentUser)(withRouter(AuthForm));

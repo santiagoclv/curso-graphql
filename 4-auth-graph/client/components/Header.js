@@ -25,11 +25,11 @@ class Header extends Component {
 
     if (user) {
       return (
-        <div className="right">
+        <ul className="right">
           <li>
-            <a onClick={this.logout.bind(this)}>Logout</a>
+            <a onClick={this.logout.bind(this)}>Logout  ({user.email})</a>
           </li>
-        </div>
+        </ul>
       );
     } else {
       return (

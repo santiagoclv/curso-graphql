@@ -9,6 +9,8 @@ import SingupForm from "./components/SingupForm";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
 
+import requierAuth from "./components/requierAuth";
+
 const networkInterface = createNetworkInterface({
   uri : '/graphql',
   opts: {
@@ -28,7 +30,7 @@ const Root = () => {
         <Route path="/" component={App} >
           <Route path="singup" component={SingupForm} />
           <Route path="login" component={LoginForm} />
-          <Route path="dashboard" component={Dashboard} />
+          <Route path="dashboard" component={requierAuth(Dashboard)} />
         </Route>
         
       </Router>
